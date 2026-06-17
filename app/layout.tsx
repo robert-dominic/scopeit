@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   description: "Turn messy product ideas into clear MVP scopes with AI.",
 };
 
+// TODO: When the Supabase auth callback handler is implemented, call
+// trackUserSignedUp() from "lib/pendo-events" after successful registration
+// and trackUserSignedIn() from "lib/pendo-events" after successful login.
+
 export default function RootLayout({
   children,
 }: Readonly<{

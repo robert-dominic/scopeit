@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { ArrowRight, Scissors, Map, Target } from "lucide-react";
 
+// TODO: When the scope creation UI is built, call the following from "lib/pendo-events":
+// - trackScopeIdeaSubmitted() in the form submission handler after the idea is sent to the AI endpoint
+// - trackScopeGenerated() in the success handler after the Groq AI response is processed
+// - trackScopeExportedPdf() after the @react-pdf/renderer PDF is generated and download triggered
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#FFF8F0]">

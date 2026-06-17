@@ -69,6 +69,11 @@
     line-height: 1.6;
   }
 
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
   h1 {
     font-size: 2.25rem;
     font-weight: 700;

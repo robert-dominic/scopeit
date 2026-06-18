@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Plus, PanelLeftClose, PanelLeftOpen, LogOut, MessageSquare } from "lucide-react";
@@ -16,15 +16,15 @@ interface SidebarProps {
 export default function Sidebar({ user, conversations: initial }: SidebarProps) {
     const [conversations, setConversations] = useState(initial);
     const [collapsed, setCollapsed] = useState(false);
+
+    useEffect(() => {
+        setConversations(initial);
+    }, [initial]);
     const router = useRouter();
     const supabase = createClient();
 
     async function handleNewChat() {
-        const res = await fetch("/api/conversations", { method: "POST" });
-        if (!res.ok) return;
-        const conv = await res.json();
-        setConversations((prev) => [conv, ...prev]);
-        router.push(`/chat?c=${conv.id}`);
+        router.push("/chat/new");
     }
 
     async function handleSignOut() {

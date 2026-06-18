@@ -54,7 +54,7 @@ export default function SidebarItem({ conversation, onDelete, onRename }: Props)
                 />
             ) : (
                 <button
-                    onClick={() => router.push(`/chat?c=${conversation.id}`)}
+                    onClick={() => router.push(`/chat/${conversation.id}`)}
                     className="flex-1 text-left text-xs text-[var(--color-dark)] truncate leading-5"
                 >
                     {conversation.title ?? "Untitled chat"}
@@ -70,7 +70,9 @@ export default function SidebarItem({ conversation, onDelete, onRename }: Props)
                 </button>
 
                 {menuOpen && (
-                    <div className="absolute left-0 top-6 z-50 bg-white border border-[var(--color-border)] rounded-xl shadow-md py-1 w-40">
+                    <div className="fixed z-[999] bg-white border border-[var(--color-border)] rounded-xl shadow-lg py-1 w-44"
+                        style={{ top: menuRef.current ? menuRef.current.getBoundingClientRect().bottom + 4 : 0, left: menuRef.current ? menuRef.current.getBoundingClientRect().left : 0 }}
+                    >
                         <button
                             onClick={() => { setRenaming(true); setMenuOpen(false); }}
                             className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[var(--color-dark)] hover:bg-[var(--color-bg)] transition-colors"

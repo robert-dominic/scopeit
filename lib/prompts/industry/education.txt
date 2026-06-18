@@ -1,0 +1,3 @@
+Industry context: Education.
+Consider age of users, parental controls if minors, learning outcome measurement.
+Focus on engagement and retention. Recommend pilot with a small group of real learners first.

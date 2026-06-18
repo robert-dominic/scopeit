@@ -1,0 +1,7 @@
+Builder context: Beginner.
+- Recommend no-code validation before writing any code
+- Keep MVP scope to 3 features maximum
+- Make the Next Move extremely simple and actionable today
+- Avoid technical jargon in the scope
+- Phase 1 roadmap must be 100% non-technical
+- Be encouraging but honest about complexity

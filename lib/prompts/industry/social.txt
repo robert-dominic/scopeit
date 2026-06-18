@@ -1,0 +1,3 @@
+Industry context: Social.
+Cold start problem is the biggest risk. MVP must work with zero users or very few.
+Focus on one core interaction loop. Avoid building features that need network effects to work.

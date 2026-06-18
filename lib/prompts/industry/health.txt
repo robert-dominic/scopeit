@@ -1,0 +1,4 @@
+Industry context: Health.
+Consider HIPAA implications, professional oversight requirements, liability concerns.
+Avoid giving medical advice. Focus on tracking, accountability, and habit formation.
+Recommend talking to healthcare professionals before building.

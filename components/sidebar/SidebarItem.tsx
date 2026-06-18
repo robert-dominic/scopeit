@@ -2,31 +2,19 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, Trash2, Pencil, Star, StarOff } from "lucide-react";
+import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
+import type { Conversation } from "@/lib/types";
 
-type Project = {
-    id: string;
-    title: string | null;
-    is_favorite: boolean;
-    created_at: string;
-};
-
-interface SidebarItemProps {
-    project: Project;
+interface Props {
+    conversation: Conversation;
     onDelete: (id: string) => void;
     onRename: (id: string, title: string) => void;
-    onToggleFavorite: (id: string, current: boolean) => void;
 }
 
-export default function SidebarItem({
-    project,
-    onDelete,
-    onRename,
-    onToggleFavorite,
-}: SidebarItemProps) {
+export default function SidebarItem({ conversation, onDelete, onRename }: Props) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [renaming, setRenaming] = useState(false);
-    const [renameValue, setRenameValue] = useState(project.title ?? "");
+    const [renameValue, setRenameValue] = useState(conversation.title ?? "");
     const menuRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
@@ -46,14 +34,12 @@ export default function SidebarItem({
     }, [renaming]);
 
     function handleRenameSubmit() {
-        if (renameValue.trim()) {
-            onRename(project.id, renameValue.trim());
-        }
+        if (renameValue.trim()) onRename(conversation.id, renameValue.trim());
         setRenaming(false);
     }
 
     return (
-        <div className="group relative flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-[#F5F0E8] transition-colors">
+        <div className="group relative flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-[var(--color-bg)] transition-colors">
             {renaming ? (
                 <input
                     ref={inputRef}
@@ -64,69 +50,40 @@ export default function SidebarItem({
                         if (e.key === "Enter") handleRenameSubmit();
                         if (e.key === "Escape") setRenaming(false);
                     }}
-                    className="flex-1 text-sm bg-transparent border-b border-[#2EC4B6] outline-none text-[#0D1B2A]"
+                    className="flex-1 text-xs bg-transparent border-b border-[var(--color-primary)] outline-none text-[var(--color-dark)]"
                 />
             ) : (
                 <button
-                    onClick={() => router.push(`/app?scope=${project.id}`)}
-                    className="flex-1 text-left text-sm text-[#0D1B2A] truncate"
+                    onClick={() => router.push(`/chat?c=${conversation.id}`)}
+                    className="flex-1 text-left text-xs text-[var(--color-dark)] truncate leading-5"
                 >
-                    {project.title ?? "Untitled scope"}
+                    {conversation.title ?? "Untitled chat"}
                 </button>
             )}
 
-            {/* Three dot menu */}
             <div className="relative" ref={menuRef}>
                 <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setMenuOpen((prev) => !prev);
-                    }}
-                    className="opacity-0 group-hover:opacity-100 text-[#6B7280] hover:text-[#0D1B2A] transition-all p-0.5 rounded"
+                    onClick={(e) => { e.stopPropagation(); setMenuOpen((p) => !p); }}
+                    className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-[var(--color-muted)] hover:text-[var(--color-dark)] transition-all"
                 >
-                    <MoreHorizontal size={14} />
+                    <MoreHorizontal size={13} />
                 </button>
 
                 {menuOpen && (
-                    <div className="absolute left-0 top-6 z-50 bg-white border border-[#D4CFC7] rounded-xl shadow-lg py-1 w-44">
+                    <div className="absolute left-0 top-6 z-50 bg-white border border-[var(--color-border)] rounded-xl shadow-md py-1 w-40">
                         <button
-                            onClick={() => {
-                                onToggleFavorite(project.id, project.is_favorite);
-                                setMenuOpen(false);
-                            }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#0D1B2A] hover:bg-[#F5F0E8] transition-colors"
+                            onClick={() => { setRenaming(true); setMenuOpen(false); }}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[var(--color-dark)] hover:bg-[var(--color-bg)] transition-colors"
                         >
-                            {project.is_favorite ? (
-                                <>
-                                    <StarOff size={14} className="text-[#6B7280]" />
-                                    Remove favorite
-                                </>
-                            ) : (
-                                <>
-                                    <Star size={14} className="text-[#FFB703]" />
-                                    Add to favorites
-                                </>
-                            )}
-                        </button>
-                        <button
-                            onClick={() => {
-                                setRenaming(true);
-                                setMenuOpen(false);
-                            }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#0D1B2A] hover:bg-[#F5F0E8] transition-colors"
-                        >
-                            <Pencil size={14} className="text-[#6B7280]" />
+                            <Pencil size={12} className="text-[var(--color-muted)]" />
                             Rename
                         </button>
-                        <div className="border-t border-[#D4CFC7] my-1" />
+                        <div className="border-t border-[var(--color-border)] my-1" />
                         <button
-                            onClick={() => {
-                                onDelete(project.id);
-                                setMenuOpen(false);
-                            }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#FF6B6B] hover:bg-[#FF6B6B]/5 transition-colors"
+                            onClick={() => { onDelete(conversation.id); setMenuOpen(false); }}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 hover:bg-red-50 transition-colors"
                         >
-                            <Trash2 size={14} />
+                            <Trash2 size={12} />
                             Delete
                         </button>
                     </div>

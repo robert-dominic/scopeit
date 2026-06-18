@@ -1,4 +1,0 @@
-Industry context: Fintech.
-Consider payment regulations, KYC requirements, trust signals, financial data sensitivity.
-Narrow the MVP to avoid regulatory risk.
-Recommend validation methods that don't require actual money movement.

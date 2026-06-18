@@ -1,5 +1,0 @@
-Builder context: Advanced/experienced builder.
-- Assume technical execution is not the risk
-- Focus on market validation and differentiation
-- Be direct about where the real challenges are
-- Phase 1 should move fast toward real user feedback

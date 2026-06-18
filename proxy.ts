@@ -28,10 +28,17 @@ export async function proxy(request: NextRequest) {
     // Refresh session — do not remove this
     const { data: { user } } = await supabase.auth.getUser()
 
-    // Protect /app routes
-    if (!user && request.nextUrl.pathname.startsWith('/app')) {
+    // Protect /chat routes
+    if (!user && request.nextUrl.pathname.startsWith('/chat')) {
         const url = request.nextUrl.clone()
-        url.pathname = '/'
+        url.pathname = '/login'
+        return NextResponse.redirect(url)
+    }
+
+    // Redirect logged-in users away from login page
+    if (user && request.nextUrl.pathname === '/login') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/chat'
         return NextResponse.redirect(url)
     }
 

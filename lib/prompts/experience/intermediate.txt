@@ -1,5 +1,0 @@
-Builder context: Intermediate developer.
-- Can build but needs scope discipline
-- Suggest simple tech stack choices
-- Phase 1 can include a basic prototype
-- Push back on over-engineering

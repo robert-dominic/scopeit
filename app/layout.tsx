@@ -1,37 +1,22 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import Script from "next/script";
-import PendoInitializer from "@/components/PendoInitializer";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
   title: "ScopeIt — From chaos to clarity",
-  description: "Turn messy product ideas into clear MVP scopes with AI.",
+  description: "Turn messy product ideas into clear, actionable product scopes.",
 };
 
-// TODO: When the Supabase auth callback handler is implemented, call
-// trackUserSignedUp() from "lib/pendo-events" after successful registration
-// and trackUserSignedIn() from "lib/pendo-events" after successful login.
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${poppins.variable} h-full`}
-      suppressHydrationWarning
-    >
-      <body className="min-h-full flex flex-col bg-background text-foreground antialiased">
-        <PendoInitializer />
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body>
         {children}
         <Script id="pendo-install" strategy="afterInteractive">
           {`(function(apiKey){

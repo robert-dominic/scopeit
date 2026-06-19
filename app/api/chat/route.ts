@@ -1,6 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import Groq from "groq-sdk";
 
+function makeTitle(text: string): string {
+    // Strip common filler openers
+    const stripped = text
+        .replace(/^(i want to (build|create|make|design)|i('m| am) (building|creating|making)|let('s| us) (build|create)|help me (build|create))\s+/i, "")
+        .trim();
+    const firstChunk = stripped.split(/[.!?,;]/)[0] ?? stripped;
+    const words = firstChunk.trim().split(/\s+/).slice(0, 5).join(" ");
+    return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const SYSTEM_PROMPT = `You are a sharp, curious product strategist inside ScopeIt. Your job is to help people turn messy ideas into clear, buildable product scopes.
@@ -20,15 +30,13 @@ You work through conversation — not interrogation. You listen, you reflect wha
 
 ## When to generate the scope
 
-Generate the scope when you genuinely understand:
-1. What the product does — specifically, not just a category
-2. Who it is for — a real type of person in a real situation, not a demographic label
-3. What problem it solves that existing options don't solve well enough
-4. What success actually looks like for this person
+Before generating a scope, you MUST get explicit confirmation from the user. When you feel you have enough to generate a solid scope, tell the user clearly — something like "I think I have enough to build your scope. Want me to go ahead?" or "Ready to scope this out — should I generate it now?" Then wait for a clear yes before generating.
 
-You do NOT need to ask about all four explicitly. Often the conversation reveals them naturally. When you have a clear enough picture, generate the scope without announcing it — just do it.
+Only generate the scope after:
+1. You genuinely understand what the product does, who it's for, what problem it solves, and what success looks like
+2. The user has explicitly confirmed they want the scope generated
 
-If you're still missing something critical, ask one focused question. Never stall. Never ask for information you can reasonably infer.
+If you're still missing something critical, ask one focused question. Never stall. Never ask for information you can reasonably infer. Never generate a scope without user confirmation — even if you're 100% ready.
 
 ## The scope document
 
@@ -140,7 +148,7 @@ export async function POST(request: Request) {
         if (!conv.title) {
             await supabase
                 .from("conversations")
-                .update({ title: trimmed.slice(0, 60) })
+                .update({ title: makeTitle(trimmed) })
                 .eq("id", conversation_id);
         }
 
@@ -198,7 +206,7 @@ export async function POST(request: Request) {
                 .insert({
                     conversation_id,
                     user_id: user.id,
-                    title: parsed.data.product_name ?? trimmed.slice(0, 60),
+                    title: parsed.data.product_name ?? makeTitle(trimmed),
                     content: parsed.data,
                 })
                 .select("id")

@@ -76,20 +76,23 @@
   }
 
   ::-webkit-scrollbar {
-    width: 4px;
+    display: none;
   }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 99px;
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 }
 
 @layer utilities {
+  .chat-header {
+    padding-top: 1.25rem;
+    padding-bottom: 1.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
   .section-label {
     font-size: 0.7rem;
     font-weight: 700;

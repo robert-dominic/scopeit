@@ -15,10 +15,10 @@ export default function Hero() {
     return (
         <>
             <section className="min-h-screen bg-[#FFF8F0] flex items-center pt-16">
-                <div className="max-w-6xl mx-auto w-full px-6 py-20 flex flex-col md:flex-row items-center gap-12 md:gap-8">
+                <div className="max-w-6xl mx-auto w-full px-6 py-16 flex flex-col md:flex-row items-center gap-8">
 
                     {/* Left — copy */}
-                    <div className="flex-1 max-w-xl">
+                    <div className="flex-1 max-w-xl w-full">
 
                         {/* Badge */}
                         <motion.div
@@ -53,7 +53,7 @@ export default function Hero() {
                             {HERO_SUBTEXT}
                         </motion.p>
 
-                        {/* CTAs — two on desktop, one on mobile */}
+                        {/* CTAs */}
                         <motion.div
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ export default function Hero() {
                                 whileTap={{ scale: 0.97 }}
                                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
                                 onClick={() => setModalOpen(true)}
-                                className="px-7 py-3.5 rounded-lg bg-[#0D1B2A] text-white text-sm font-semibold hover:bg-[#0D1B2A]/85 transition-colors"
+                                className="w-full md:w-auto px-7 py-4 rounded-lg bg-[#0D1B2A] text-white text-sm font-semibold hover:bg-[#0D1B2A]/85 transition-colors"
                             >
                                 Start scoping free
                             </motion.button>
@@ -82,12 +82,12 @@ export default function Hero() {
                         </motion.div>
                     </div>
 
-                    {/* Right — floating cards */}
+                    {/* Right — cards (floating on desktop, stacked on mobile) */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0.15 }}
-                        className="flex-1 w-full md:max-w-lg h-[420px] relative -mt-16"
+                        className="w-full md:flex-1 md:max-w-lg"
                     >
                         <HeroCards />
                     </motion.div>

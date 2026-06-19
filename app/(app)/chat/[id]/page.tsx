@@ -229,7 +229,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
 
                 {/* Input — hidden once scope is generated */}
                 {!activeScope && (
-                    <div className="flex-shrink-0 px-3 md:px-4 pb-4 md:pb-4 pt-2 bg-[#FFF8F0]">
+                    <div className="flex-shrink-0 px-3 md:px-4 pt-2 bg-[#FFF8F0]" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom) + 0.75rem)" }}>
                         <div className="max-w-3xl mx-auto">
                             <ChatInput onSubmit={sendMessage} isLoading={isLoading} />
                         </div>

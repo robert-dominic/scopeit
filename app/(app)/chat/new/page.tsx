@@ -88,7 +88,8 @@ export default function NewChatPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: greeting ? 1 : 0, y: greeting ? 0 : 8 }}
                 transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex-shrink-0 px-3 md:px-6 pb-6 pt-2"
+                className="flex-shrink-0 px-3 md:px-6 pt-2"
+                style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom) + 1rem)" }}
             >
                 <div className="max-w-2xl mx-auto">
                     <ChatInput onSubmit={handleSubmit} isLoading={false} />

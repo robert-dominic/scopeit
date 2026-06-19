@@ -34,6 +34,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
 })('c3394d38-3ac4-46e4-b46d-436b809ea8d6');`}
         </Script>
+        {/* Initialize Novus analytics for anonymous visitors.
+            Once Supabase auth is wired up, call pendo.initialize() again
+            with the authenticated user's id and email so visitors are identified. */}
+        <Script id="pendo-init" strategy="afterInteractive">
+          {`pendo.initialize({ visitor: { id: 'ANONYMOUS' } });`}
+        </Script>
       </body>
     </html>
   );

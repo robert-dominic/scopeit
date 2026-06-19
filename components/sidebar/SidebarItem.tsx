@@ -76,7 +76,7 @@ export default function SidebarItem({ conversation, onDelete, onRename, onNaviga
                 <div className="relative" ref={menuRef}>
                     <button
                         onClick={(e) => { e.stopPropagation(); setMenuOpen((p) => !p); }}
-                        className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-[#0D1B2A]/40 hover:text-[#0D1B2A] transition-all"
+                        className="p-0.5 rounded text-[#0D1B2A]/40 hover:text-[#0D1B2A] transition-all"
                     >
                         <MoreHorizontal size={13} />
                     </button>

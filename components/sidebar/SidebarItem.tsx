@@ -33,7 +33,12 @@ export default function SidebarItem({ conversation, onDelete, onRename, onNaviga
     }, []);
 
     useEffect(() => {
-        if (renaming) inputRef.current?.focus();
+        if (renaming) {
+            const el = inputRef.current;
+            if (!el) return;
+            el.focus();
+            el.select();
+        }
     }, [renaming]);
 
     function handleRenameSubmit() {
@@ -44,26 +49,29 @@ export default function SidebarItem({ conversation, onDelete, onRename, onNaviga
     return (
         <>
             <div className="group relative flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-[#0D1B2A]/5 transition-colors">
-                {renaming ? (
-                    <input
-                        ref={inputRef}
-                        value={renameValue}
-                        onChange={(e) => setRenameValue(e.target.value)}
-                        onBlur={handleRenameSubmit}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") handleRenameSubmit();
-                            if (e.key === "Escape") setRenaming(false);
-                        }}
-                        className="flex-1 text-sm bg-transparent border-b border-[#2EC4B6] outline-none text-[#0D1B2A]"
-                    />
-                ) : (
-                    <button
-                        onClick={() => { router.push(`/chat/${conversation.id}`); onNavigate?.(); }}
-                        className="flex-1 text-left text-sm text-[#0D1B2A]/70 truncate leading-5"
-                    >
-                        {conversation.title || "…"}
-                    </button>
-                )}
+                {/* Title — always in the same slot, switches between button text and input */}
+                <div className="flex-1 min-w-0">
+                    {renaming ? (
+                        <input
+                            ref={inputRef}
+                            value={renameValue}
+                            onChange={(e) => setRenameValue(e.target.value)}
+                            onBlur={handleRenameSubmit}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleRenameSubmit();
+                                if (e.key === "Escape") setRenaming(false);
+                            }}
+                            className="w-full text-sm text-[#0D1B2A] bg-transparent outline-none leading-5"
+                        />
+                    ) : (
+                        <button
+                            onClick={() => { router.push(`/chat/${conversation.id}`); onNavigate?.(); }}
+                            className="w-full text-left text-sm text-[#0D1B2A]/70 leading-5 block truncate"
+                        >
+                            {conversation.title || "…"}
+                        </button>
+                    )}
+                </div>
 
                 <div className="relative" ref={menuRef}>
                     <button

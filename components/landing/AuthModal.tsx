@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Eye, EyeOff } from "lucide-react";
 import { GrGithub } from "react-icons/gr";
 
 type Mode = "login" | "signup";
@@ -13,15 +13,25 @@ interface Props {
     onClose: () => void;
 }
 
+function pendoIdentify(id: string, email: string) {
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).pendo?.identify({ visitor: { id, email } });
+    } catch { }
+}
+
 export default function AuthModal({ open, onClose }: Props) {
     const [mode, setMode] = useState<Mode>("signup");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [githubLoading, setGithubLoading] = useState(false);
+    const [emailLoading, setEmailLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
     const supabase = createClient();
+    const anyLoading = githubLoading || emailLoading;
 
     function reset() {
         setError(null);
@@ -37,7 +47,7 @@ export default function AuthModal({ open, onClose }: Props) {
 
     async function handleEmailAuth(e: React.FormEvent) {
         e.preventDefault();
-        setLoading(true);
+        setEmailLoading(true);
         setError(null);
         setSuccess(null);
 
@@ -50,20 +60,26 @@ export default function AuthModal({ open, onClose }: Props) {
             if (error) setError(error.message);
             else setSuccess("Check your email to confirm your account.");
         } else {
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) setError(error.message);
-            else window.location.href = "/chat";
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                setError(error.message);
+            } else if (data.user) {
+                pendoIdentify(data.user.id, data.user.email ?? "");
+                window.location.href = "/chat";
+                return;
+            }
         }
 
-        setLoading(false);
+        setEmailLoading(false);
     }
 
     async function handleGitHub() {
-        setLoading(true);
+        setGithubLoading(true);
         await supabase.auth.signInWithOAuth({
             provider: "github",
             options: { redirectTo: `${window.location.origin}/api/auth/callback` },
         });
+        // Page navigates away — no need to reset loading
     }
 
     return (
@@ -100,25 +116,29 @@ export default function AuthModal({ open, onClose }: Props) {
                             </button>
 
                             <div className="mb-6">
-                                <h2 className="text-xl font-bold text-[#0D1B2A] font-[var(--font-heading)]">
+                                <h2 className="text-xl font-bold text-[#0D1B2A]" style={{ fontFamily: "var(--font-heading)" }}>
                                     {mode === "signup" ? "Get started free" : "Welcome back"}
                                 </h2>
                                 <p className="text-sm text-gray-400 mt-1">
                                     {mode === "signup"
                                         ? "Scope your first idea in minutes."
-                                        : "Sign in to continue with Scout."}
+                                        : "Sign in to continue with ScopeIt."}
                                 </p>
                             </div>
 
+                            {/* GitHub button — own loading state */}
                             <motion.button
                                 whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={handleGitHub}
-                                disabled={loading}
-                                className="w-full flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl border border-gray-200 text-sm font-medium text-[#0D1B2A] hover:bg-gray-50 transition-colors disabled:opacity-50 mb-4"
+                                disabled={anyLoading}
+                                className="w-full flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl border border-gray-200 text-sm font-medium text-[#0D1B2A] hover:bg-gray-50 transition-colors disabled:opacity-60 mb-4"
                             >
-                                <GrGithub size={16} />
-                                Continue with GitHub
+                                {githubLoading
+                                    ? <Loader2 size={16} className="animate-spin" />
+                                    : <GrGithub size={16} />
+                                }
+                                {githubLoading ? "Connecting…" : "Continue with GitHub"}
                             </motion.button>
 
                             <div className="flex items-center gap-3 mb-4">
@@ -134,16 +154,28 @@ export default function AuthModal({ open, onClose }: Props) {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-[#0D1B2A] placeholder:text-gray-400 outline-none focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 transition-all"
+                                    disabled={anyLoading}
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-[#0D1B2A] placeholder:text-gray-400 outline-none focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 transition-all disabled:opacity-50"
                                 />
-                                <input
-                                    type="password"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-[#0D1B2A] placeholder:text-gray-400 outline-none focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 transition-all"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        disabled={anyLoading}
+                                        className="w-full px-4 py-3 pr-11 rounded-xl border border-gray-200 text-sm text-[#0D1B2A] placeholder:text-gray-400 outline-none focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 transition-all disabled:opacity-50"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((v) => !v)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                        tabIndex={-1}
+                                    >
+                                        {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                                    </button>
+                                </div>
 
                                 <AnimatePresence>
                                     {error && (
@@ -168,14 +200,15 @@ export default function AuthModal({ open, onClose }: Props) {
                                     )}
                                 </AnimatePresence>
 
+                                {/* Email submit button — own loading state */}
                                 <motion.button
                                     whileHover={{ scale: 1.01 }}
                                     whileTap={{ scale: 0.97 }}
                                     type="submit"
-                                    disabled={loading}
-                                    className="w-full py-3 rounded-xl bg-[#2EC4B6] text-white text-sm font-semibold hover:bg-[#26AFA2] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                    disabled={anyLoading}
+                                    className="w-full py-3 rounded-xl bg-[#2EC4B6] text-white text-sm font-semibold hover:bg-[#26AFA2] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                                 >
-                                    {loading && <Loader2 size={14} className="animate-spin" />}
+                                    {emailLoading && <Loader2 size={14} className="animate-spin" />}
                                     {mode === "signup" ? "Create account" : "Sign in"}
                                 </motion.button>
                             </form>

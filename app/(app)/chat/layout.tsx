@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import SidebarShell from "@/components/sidebar/SidebarShell";
+import PendoIdentify from "@/components/PendoIdentify";
 
 export default async function ChatLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient();
@@ -15,8 +16,11 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
         .order("created_at", { ascending: false });
 
     return (
-        <SidebarShell user={user} conversations={conversations ?? []}>
-            {children}
-        </SidebarShell>
+        <>
+            <PendoIdentify userId={user.id} email={user.email ?? ""} />
+            <SidebarShell user={user} conversations={conversations ?? []}>
+                {children}
+            </SidebarShell>
+        </>
     );
 }

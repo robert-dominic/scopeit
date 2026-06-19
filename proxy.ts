@@ -28,15 +28,15 @@ export async function proxy(request: NextRequest) {
     // Refresh session — do not remove this
     const { data: { user } } = await supabase.auth.getUser()
 
-    // Protect /chat routes
+    // Protect /chat routes — send unauthenticated users to landing page
     if (!user && request.nextUrl.pathname.startsWith('/chat')) {
         const url = request.nextUrl.clone()
-        url.pathname = '/login'
+        url.pathname = '/'
         return NextResponse.redirect(url)
     }
 
-    // Redirect logged-in users away from login page
-    if (user && request.nextUrl.pathname === '/login') {
+    // Redirect logged-in users away from landing page
+    if (user && request.nextUrl.pathname === '/') {
         const url = request.nextUrl.clone()
         url.pathname = '/chat'
         return NextResponse.redirect(url)

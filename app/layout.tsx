@@ -17,7 +17,27 @@ const montserrat = Montserrat_Alternates({
 
 export const metadata: Metadata = {
   title: "ScopeIt — From chaos to clarity",
-  description: "Turn messy product ideas into clear, actionable product scopes.",
+  description: "Turn messy product ideas into clear, structured scope documents in minutes. Powered by AI.",
+  metadataBase: new URL("https://scopeit.app"),
+  openGraph: {
+    title: "ScopeIt — From chaos to clarity",
+    description: "Turn messy product ideas into clear, structured scope documents in minutes. Powered by AI.",
+    url: "https://scopeit.app",
+    siteName: "ScopeIt",
+    images: [{ url: "/logo.png", width: 512, height: 512, alt: "ScopeIt logo" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "ScopeIt — From chaos to clarity",
+    description: "Turn messy product ideas into clear, structured scope documents in minutes.",
+    images: ["/logo.png"],
+  },
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

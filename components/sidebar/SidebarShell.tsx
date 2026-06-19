@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import MobileSidebarDrawer from "./MobileSidebarDrawer";
+import OnboardingTour, { useShouldShowTour } from "@/components/OnboardingTour";
 import type { User } from "@supabase/supabase-js";
 import type { Conversation } from "@/lib/types";
 
@@ -15,6 +16,13 @@ interface Props {
 export default function SidebarShell({ user, conversations, children }: Props) {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const { show: showTour, dismiss: dismissTour } = useShouldShowTour();
+
+    const hasDisplayName = !!(
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.display_name
+    );
 
     return (
         <div className="h-screen flex overflow-hidden bg-[#FFF8F0]">
@@ -52,12 +60,20 @@ export default function SidebarShell({ user, conversations, children }: Props) {
                     <span className="text-base font-extrabold text-[#0D1B2A]" style={{ fontFamily: "var(--font-heading)" }}>
                         Scope<span className="text-[#2EC4B6]">It</span>
                     </span>
-                    {/* Spacer to center the logo */}
                     <div className="w-9" />
                 </div>
 
                 {children}
             </main>
+
+            {/* Onboarding tour — shown once per browser via localStorage */}
+            {showTour && (
+                <OnboardingTour
+                    hasDisplayName={hasDisplayName}
+                    userEmail={user.email ?? ""}
+                    onDone={dismissTour}
+                />
+            )}
         </div>
     );
 }

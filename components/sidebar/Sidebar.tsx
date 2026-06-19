@@ -66,7 +66,8 @@ export default function Sidebar({ user, conversations: initial, collapsed, onCol
 
     return (
         <motion.aside
-            animate={{ width: targetWidth, minWidth: targetWidth }}
+            animate={{ width: targetWidth }}
+            style={{ minWidth: targetWidth }}
             transition={{ duration: 0.3, ease }}
             className="flex-shrink-0 border-r border-[#0D1B2A]/8 bg-[#FFF8F0] flex flex-col overflow-hidden h-full"
         >

@@ -52,13 +52,14 @@ export default function AuthModal({ open, onClose }: Props) {
         setSuccess(null);
 
         if (mode === "signup") {
-            const { error } = await supabase.auth.signUp({
-                email,
-                password,
-                options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
-            });
-            if (error) setError(error.message);
-            else setSuccess("Check your email to confirm your account.");
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) {
+                setError(error.message);
+            } else if (data.user) {
+                pendoIdentify(data.user.id, data.user.email ?? "");
+                window.location.href = "/chat";
+                return;
+            }
         } else {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) {

@@ -69,9 +69,9 @@ export default function NewChatPage() {
     }
 
     return (
-        <div className="flex flex-1 flex-col overflow-hidden bg-[#FFF8F0] relative">
-            {/* Greeting — vertically centered in the space above input */}
-            <div className="flex-1 flex items-center justify-center px-4 md:px-6 pb-4">
+        <div className="flex flex-col bg-[#FFF8F0]" style={{ height: "100%", minHeight: 0 }}>
+            {/* Greeting — takes all remaining space, centers content */}
+            <div className="flex-1 flex items-center justify-center px-4 md:px-6 min-h-0">
                 <motion.h1
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: greeting ? 1 : 0, y: greeting ? 0 : 10 }}
@@ -88,7 +88,7 @@ export default function NewChatPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: greeting ? 1 : 0, y: greeting ? 0 : 8 }}
                 transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex-shrink-0 px-3 md:px-6 pb-5 md:pb-6"
+                className="flex-shrink-0 px-3 md:px-6 pb-6 pt-2"
             >
                 <div className="max-w-2xl mx-auto">
                     <ChatInput onSubmit={handleSubmit} isLoading={false} />

@@ -205,18 +205,6 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
                     )}
                 </div>
 
-                {/* Mobile chat title + scope toggle */}
-                <div className="md:hidden flex-shrink-0 flex items-center justify-between px-4 py-2 bg-[#FFF8F0]">
-                    <p className="text-sm font-semibold text-[#0D1B2A]/60 truncate flex-1">{title || ""}</p>
-                    {activeScope && (
-                        <button
-                            onClick={() => setScopePanelOpen(true)}
-                            className="p-1.5 rounded-lg text-[#0D1B2A]/40 hover:text-[#0D1B2A]/70 hover:bg-[#0D1B2A]/6 transition-colors flex-shrink-0"
-                        >
-                            <FileText size={16} />
-                        </button>
-                    )}
-                </div>
 
                 {/* Messages */}
                 <MessageList

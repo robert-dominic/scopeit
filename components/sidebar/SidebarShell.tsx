@@ -25,7 +25,7 @@ export default function SidebarShell({ user, conversations, children }: Props) {
     );
 
     return (
-        <div className="h-screen flex overflow-hidden bg-[#FFF8F0]">
+        <div className="flex overflow-hidden bg-[#FFF8F0]" style={{ height: "100dvh" }}>
             {/* Desktop sidebar — hidden on mobile */}
             <div className="hidden md:flex flex-shrink-0">
                 <Sidebar
@@ -47,7 +47,7 @@ export default function SidebarShell({ user, conversations, children }: Props) {
 
             <main className="flex-1 flex flex-col overflow-hidden min-w-0 will-change-auto">
                 {/* Mobile top bar */}
-                <div className="md:hidden flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0 border-b border-[#0D1B2A]/8 bg-[#FFF8F0]">
+                <div className="md:hidden flex items-center justify-between px-4 py-2 flex-shrink-0 border-b border-[#0D1B2A]/8 bg-[#FFF8F0]">
                     <button
                         onClick={() => setMobileOpen(true)}
                         className="p-2 rounded-lg text-[#0D1B2A]/50 hover:bg-[#0D1B2A]/6 transition-colors"
